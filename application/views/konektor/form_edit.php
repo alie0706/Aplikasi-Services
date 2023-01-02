@@ -1,0 +1,154 @@
+<div class="row">
+                    <div class="col-md-12">
+                        <h2 class="page-header">
+                        APP-SERVICES <small>Edit Data Konektor</small>
+                        </h2>
+                    </div>
+                </div> 
+                <!-- /. ROW  -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <?php echo form_open('konektor/edit'); ?>
+                                <input type="hidden" value="<?php echo $record['id_konektor']?>" name="id">
+                                <div class="form-group">
+                                    <label>Kode Konektor</label>
+                                    <input type="text" name="kd_konektor" class="form-control" placeholder="Kode Konektor" value="<?php echo $record['kd_konektor']?>" maxlength="2" onkeyup="this.value = this.value.toUpperCase()">
+                                </div>
+                                <div class="form-group">
+                                    <label>Nama Konektor</label>
+                                    <input type="text" name="nama_konektor" class="form-control" placeholder="Nama Konektor" value="<?php echo $record['nama_konektor']?>" >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Kategori</label>
+                                    <select name="kategori" id="kategori" class="form-control">
+                                        <?php foreach ($kategori as $k) {
+                                            echo "<option value='$k->id_kategori'";
+                                            echo $record['id_kategori']==$k->id_kategori?'selected':'';
+                                            echo">$k->nama_kategori</option>";
+                                        } ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Jenis</label>
+                                    <select name="jenis" id="jenis" class="form-control">
+                                    <?php foreach ($jenis as $k) {
+                                            echo "<option value='$k->id_jenis'";
+                                            echo $record['id_jenis']==$k->id_jenis?'selected':'';
+                                            echo">$k->nama_jenis</option>";
+                                        } ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Merk</label>
+                                    <select name="merk" id="merk" class="form-control">
+                                    <?php foreach ($merk as $k) {
+                                            echo "<option value='$k->id_merk'";
+                                            echo $record['id_merk']==$k->id_merk?'selected':'';
+                                            echo">$k->nama_merk</option>";
+                                        } ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Jenis Obat</label>
+                                    <select name="jenis_obat" id="jenis_obat" class="form-control">
+                                    <?php foreach ($jenis_obat as $k) {
+                                            echo "<option value='$k->id_jenis_obat'";
+                                            echo $record['id_jenis_obat']==$k->id_jenis_obat?'selected':'';
+                                            echo">$k->nama_jenis_obat</option>";
+                                        } ?>
+                                    </select>
+                                </div>
+                                
+                                <button type="submit" name="submit" class="btn btn-primary btn-sm">Simpan</button> | 
+                                <?php echo anchor('konektor','Kembali',array('class'=>'btn btn-danger btn-sm'))?>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- /. PANEL  -->
+                    </div>
+                </div>
+                <script>
+
+                    $("#kategori").change(function(){
+
+                        // variabel dari nilai combo box kategori
+                        var id_kategori = $("#kategori").val();
+                    // alert(id_kategori);
+                        // Menggunakan ajax untuk mengirim dan dan menerima data dari server
+                        $.ajax({
+                            url : "<?php echo base_url();?>jenis/get_jenis",
+                            method : "POST",
+                            data : {id_kategori:id_kategori},
+                            async : false,
+                            dataType : 'json',
+                            success: function(data){
+                                var html = '';
+                                var i;
+
+                                html += '<option value=0>Silahkan Pilih </option>';
+                                for(i=0; i<data.length; i++){
+                                    html += '<option value='+data[i].id_jenis+'>'+data[i].nama_jenis+'</option>';
+                                }
+                                $('#jenis').html(html);
+
+                            }
+                        });
+                    });
+
+                    $("#jenis").change(function(){
+
+                    // variabel dari nilai combo box kategori
+                    var id_jenis = $("#jenis").val();
+
+                    // Menggunakan ajax untuk mengirim dan dan menerima data dari server
+                    $.ajax({
+                        url : "<?php echo base_url();?>jenis/get_merk",
+                        method : "POST",
+                        data : {id_jenis:id_jenis},
+                        async : false,
+                        dataType : 'json',
+                        success: function(data){
+                            var html = '';
+                            var i;
+
+                            html += '<option value=0>Silahkan Pilih </option>';
+                            for(i=0; i<data.length; i++){
+                                html += '<option value='+data[i].id_merk+'>'+data[i].nama_merk+'</option>';
+                            }
+                            $('#merk').html(html);
+
+                        }
+                    });
+                    });
+                    
+                    $("#merk").change(function(){
+
+                    // variabel dari nilai combo box kategori
+                    var id_merk = $("#merk").val();
+
+                    // Menggunakan ajax untuk mengirim dan dan menerima data dari server
+                    $.ajax({
+                        url : "<?php echo base_url();?>merk/get_jenis_obat",
+                        method : "POST",
+                        data : {id_merk:id_merk},
+                        async : false,
+                        dataType : 'json',
+                        success: function(data){
+                            var html = '';
+                            var i;
+
+                            html += '<option value=0>Silahkan Pilih </option>';
+                            for(i=0; i<data.length; i++){
+                                html += '<option value='+data[i].id_jenis_obat+'>'+data[i].nama_jenis_obat+'</option>';
+                            }
+                            $('#jenis_obat').html(html);
+
+                        }
+                    });
+                    });
+                </script>
